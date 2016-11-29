@@ -78,6 +78,15 @@ namespace Nancy.Simple
 
                 var community_cards = gameState["community_cards"];
 
+                // If we are only 2 players remaining with big blind. Go all in.
+                if (gameState["players"].Count() == 2)
+                {
+                    if (small_blind > 500)
+                    {
+                        return 99999;
+                    }
+                }
+
                 bool hasOtherPlay = GetPlay(out value,cards, community_cards, ourPlayer, current_buy_in, small_blind);
                 if (!hasOtherPlay)
                 {
@@ -104,6 +113,10 @@ namespace Nancy.Simple
         private static bool GetPlay(out int betValue, List<Card> cards, JToken communityCards, JToken ourPlayer, int currentBuyIn, int smallBlind)
         {
             var currentBet = ourPlayer["bet"].Value<int>();
+
+            // If only 2 players and big blind > 250. 
+            // Go all in.
+
 
             // Do stuff during the pre-flop
             var actedOnPreFlop = ActOnPreFlop(out betValue,cards,communityCards,ourPlayer,currentBuyIn,smallBlind);
@@ -133,6 +146,12 @@ namespace Nancy.Simple
 
             if (commCount == 3)
             {
+                var sortedCards = allCards.OrderBy(x => x.Rank)
+                    .ThenBy(x => x.Suit);
+
+
+
+
 
                 // Can we do something with the cards?   
             }
