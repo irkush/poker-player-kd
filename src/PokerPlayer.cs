@@ -9,6 +9,8 @@ namespace Nancy.Simple
 
 		public static int BetRequest(JObject gameState)
 		{
+            Console.Error.WriteLine("Betting round started");
+
 		    try
 		    {
                 //return 30;
@@ -19,6 +21,11 @@ namespace Nancy.Simple
                 var in_action = gameState["in_action"].Value<int>();
 
                 var our_current_bet = gameState["players"][in_action]["bet"].Value<int>();
+
+
+		        var hole_cards = gameState["players"][in_action]["hole_cards"];
+
+               // foreach()
 
 
                 // Om vi har bra par gå all in. ( KnKn, DD, KK, EE )
