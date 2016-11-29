@@ -81,7 +81,10 @@ namespace Nancy.Simple
                 bool hasOtherPlay = GetPlay(out betValue,cards, community_cards, ourPlayer, current_buy_in, small_blind);
                 if (!hasOtherPlay)
                 {
-                    return current_buy_in - our_current_bet;
+                    var amount = current_buy_in - our_current_bet;
+                    Console.Error.WriteLine("Got no better to do, defaulting " + amount);
+                   
+                    return amount;
                 }
 
 
