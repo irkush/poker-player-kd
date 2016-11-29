@@ -10,7 +10,7 @@ namespace Nancy.Simple
 		public static int BetRequest(JObject gameState)
 		{
             Console.Error.WriteLine("Betting round started");
-
+		    int value = 0;
 		    try
 		    {
                 //return 30;
@@ -25,7 +25,7 @@ namespace Nancy.Simple
 
 		        var hole_cards = gameState["players"][in_action]["hole_cards"];
 
-               // foreach()
+                // foreach()
 
 
                 // Om vi har bra par gå all in. ( KnKn, DD, KK, EE )
@@ -33,7 +33,7 @@ namespace Nancy.Simple
 
                 // Allways check
 
-                return current_buy_in - our_current_bet;
+                value = current_buy_in - our_current_bet;
 
 
             }
@@ -42,8 +42,10 @@ namespace Nancy.Simple
 		        Console.Error.Write(ex);
 		    }
 
+            Console.Error.WriteLine("Playing: " + value);
+
 			//TODO: Use this method to return the value You want to bet
-			return 0;
+			return value;
 		}
 
 		public static void ShowDown(JObject gameState)
