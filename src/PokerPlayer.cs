@@ -8,7 +8,7 @@ namespace Nancy.Simple
 {
     public static class PokerPlayer
     {
-        public static readonly string VERSION = "Version 1.1 Other teams are going down";
+        public static readonly string VERSION = "Version 1.2 Other teams are going down";
 
         public static Dictionary<string,int> Dictionary = new Dictionary<string, int>()
                 {
@@ -102,12 +102,24 @@ namespace Nancy.Simple
                 {
                     // Our hand
 
-                    // Same rank, go all in.
+                    // Same rank and suit, go all in.
                     if (cards[0].Item1 == cards[1].Item1)
+                        
                     {
-                        Console.Error.WriteLine("We have pairs, going all in");
-                        betValue = ourPlayer["stack"].Value<int>();
-                        return true;
+                        // ALl in på bra kort.
+                        if (Dictionary[cards[0].Item1] > 10)
+                        {
+                            Console.Error.WriteLine("We have pairs, going all in");
+                            betValue = ourPlayer["stack"].Value<int>();
+                            return true;
+                        }
+                        else
+                        {
+                            // Om vi har ett "sämre" par så lägger höjer vi med 2 * smallBlind.
+                            betValue = currentBuyIn - ourPlayer["bet"].Value<int>() + smallBlind*2;
+                            return true;
+                        }
+                            
                     }
 
 
