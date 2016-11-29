@@ -36,82 +36,89 @@ namespace Nancy.Simple
 
             Console.Error.WriteLine(gameState["game_id"].Value<string>());
             int value = 0;
-            try
-            {
-                //return 30;
 
-                var current_buy_in = gameState["current_buy_in"].Value<int>();
-
-
-                var in_action = gameState["in_action"].Value<int>();
-
-
-                var ourPlayer = gameState["players"][in_action];
-
-
-                var our_current_bet = ourPlayer["bet"].Value<int>();
-
-
-                var hole_cards = ourPlayer["hole_cards"];
-
-
-                var small_blind = gameState["small_blind"].Value<int>();
-
-
-                Console.Error.WriteLine("Our current bet: " + ourPlayer["bet"].Value<int>());
-
-
-                var cards = new List<Card>();
-                foreach (var card in hole_cards)
-                {
-                    var rank = card["rank"].Value<string>();
-                    var suit = card["suit"].Value<string>();
-
-                    cards.Add(new Card(rank, suit));
-
-                }
-                if (cards.Count == 2)
-                {
-                    Console.Error.WriteLine("We have " + cards[0].Rank + " " + cards[0].Suit);
-                    Console.Error.WriteLine("We have " + cards[1].Rank + " " + cards[1].Suit);
-                }
-
-                var community_cards = gameState["community_cards"];
-                // ASADDS
-                return gameState["stack"].Value<int>();
+            var in_action = gameState["in_action"].Value<int>();
+            var ourPlayer = gameState["players"][in_action];
+            return ourPlayer["stack"].Value<int>();
 
 
 
-                // If we are only 2 players remaining with big blind. Go all in.
-                if (gameState["players"].Count() == 2)
-                {
-                    if (small_blind > 500)
-                    {
-                        return 99999;
-                    }
-                }
+            //try
+            //{
+            //    //return 30;
 
-                bool hasOtherPlay = GetPlay(out value,cards, community_cards, ourPlayer, current_buy_in, small_blind);
-                if (!hasOtherPlay)
-                {
-                    var amount = current_buy_in - our_current_bet;
-                    Console.Error.WriteLine("Got no better to do, defaulting " + amount);
+            //    var current_buy_in = gameState["current_buy_in"].Value<int>();
+
+
+            //    var in_action = gameState["in_action"].Value<int>();
+
+
+            //    var ourPlayer = gameState["players"][in_action];
+
+
+            //    var our_current_bet = ourPlayer["bet"].Value<int>();
+
+
+            //    var hole_cards = ourPlayer["hole_cards"];
+
+
+            //    var small_blind = gameState["small_blind"].Value<int>();
+
+
+            //    Console.Error.WriteLine("Our current bet: " + ourPlayer["bet"].Value<int>());
+
+
+            //    var cards = new List<Card>();
+            //    foreach (var card in hole_cards)
+            //    {
+            //        var rank = card["rank"].Value<string>();
+            //        var suit = card["suit"].Value<string>();
+
+            //        cards.Add(new Card(rank, suit));
+
+            //    }
+            //    if (cards.Count == 2)
+            //    {
+            //        Console.Error.WriteLine("We have " + cards[0].Rank + " " + cards[0].Suit);
+            //        Console.Error.WriteLine("We have " + cards[1].Rank + " " + cards[1].Suit);
+            //    }
+
+            //    var community_cards = gameState["community_cards"];
+            //    // ASADDS
+            //    return gameState["stack"].Value<int>();
+
+
+
+            //    // If we are only 2 players remaining with big blind. Go all in.
+            //    if (gameState["players"].Count() == 2)
+            //    {
+            //        if (small_blind > 500)
+            //        {
+            //            return 99999;
+            //        }
+            //    }
+
+            //    bool hasOtherPlay = GetPlay(out value,cards, community_cards, ourPlayer, current_buy_in, small_blind);
+            //    if (!hasOtherPlay)
+            //    {
+            //        var amount = current_buy_in - our_current_bet;
+            //        Console.Error.WriteLine("Got no better to do, defaulting " + amount);
                    
-                    return amount;
-                }
+            //        return amount;
+            //    }
 
 
 
-            }
-            catch (Exception ex)
-            {
-                Console.Error.Write(ex);
-            }
+            //}
+            //catch (Exception ex)
+            //{
+            //    Console.Error.Write(ex);
+            //}
 
-            Console.Error.WriteLine("Playing: " + value);
+            //Console.Error.WriteLine("Playing: " + value);
 
-            //TODO: Use this method to return the value You want to bet
-            return value;
+            ////TODO: Use this method to return the value You want to bet
+            //return value;
         }
 
         private static bool GetPlay(out int betValue, List<Card> cards, JToken communityCards, JToken ourPlayer, int currentBuyIn, int smallBlind)
