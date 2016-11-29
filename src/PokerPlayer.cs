@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Text;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
 namespace Nancy.Simple
@@ -111,10 +112,18 @@ namespace Nancy.Simple
                 return true;
             }
 
+            var commCount = communityCards.Count();
+            var allCards = new List<Card>(cards);
+            foreach (var card in communityCards)
+            {
+                var rank = card["rank"].Value<string>();
+                var suit = card["suit"].Value<string>();
+                allCards.Add(new Card(rank,suit));
+            }
 
             try
             {
-                ContactRainman();
+                ContactRainman(allCards);
             }
             catch (Exception ex)
             {
@@ -122,7 +131,6 @@ namespace Nancy.Simple
                 Console.Error.WriteLine(ex);
             }
 
-            var commCount = communityCards.Count();
             if (commCount == 3)
             {
 
@@ -214,15 +222,24 @@ namespace Nancy.Simple
             return currentBuyIn + currentBet + smallBlind*2;
         }
 
-        public static void ContactRainman()
+        public static void ContactRainman(List<Card>  allCards)
         {
             string address = "http://rainman.leanpoker.org/rank";
             var httpWebRequest = (HttpWebRequest)WebRequest.Create(address);
             httpWebRequest.ContentType = "text/plain";
             httpWebRequest.Method = "POST";
 
-            using (var streamWriter = new StreamWriter(httpWebRequest.GetRequestStream()))
+            using (var streamWriter = new StreamWriter(httpWebRequest.GetRequestStream()
+                ))
             {
+                var baseStr = "cards=";
+
+                var result = JsonConvert.SerializeObject(allCards);
+                Console.Error.WriteLine("Json sent: " + result);
+
+
+
+
                 string json = "cards=[{ \"rank\":\"5\",\"suit\":\"diamonds\"}]";
 
                 streamWriter.Write(json);
