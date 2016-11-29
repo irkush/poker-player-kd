@@ -77,6 +77,7 @@ namespace Nancy.Simple
                 }
 
                 var community_cards = gameState["community_cards"];
+                // ASADDS
                 return gameState["stack"].Value<int>();
 
 
