@@ -1,11 +1,14 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using Newtonsoft.Json.Linq;
 
 namespace Nancy.Simple
 {
 	public static class PokerPlayer
 	{
-		public static readonly string VERSION = "Version 1.1 CheckAll With Logging";
+		public static readonly string VERSION = "Version 1.1 Bet 1000 on pre-flop pair";
 
 		public static int BetRequest(JObject gameState)
 		{
@@ -25,6 +28,40 @@ namespace Nancy.Simple
 
 		        var hole_cards = gameState["players"][in_action]["hole_cards"];
 
+
+		        var cards = new List<Tuple<string, string>>();
+		        foreach (var card in hole_cards)
+		        {
+		            var rank = card["rank"].Value<string>();
+		            var suit = card["suit"].Value<string>();
+
+                    cards.Add(new Tuple<string, string>(rank,suit));
+
+		        }
+		        if (cards.Count == 2)
+		        {
+		            Console.Error.WriteLine("We have " + cards[0].Item1 + " " + cards[1].Item1);
+		        }
+
+
+		        var community_cards = gameState["community_cards"];
+		        if (!community_cards.HasValues)
+		        {
+		            Console.Error.WriteLine("No community cards in place");
+		            if (cards.Count == 2 && cards[0].Item1 == cards[1].Item1)
+		            {
+                        Console.Error.WriteLine("We have pairs, going all in");
+		                value = 1000;
+		            }
+
+
+		        }
+		        else
+		        {
+                    value = current_buy_in - our_current_bet;
+                }
+
+
                 // foreach()
 
 
@@ -33,7 +70,7 @@ namespace Nancy.Simple
 
                 // Allways check
 
-                value = current_buy_in - our_current_bet;
+               
 
 
             }
