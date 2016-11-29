@@ -210,7 +210,7 @@ namespace Nancy.Simple
 
 
                     //Someone has raised/all in
-                    if (ourPlayer["bet"].Value<int>() < currentBuyIn)
+                    //if (ourPlayer["bet"].Value<int>() < currentBuyIn)
                     {
 
                         var firstCardValue = Dictionary[cards[0].Rank];
