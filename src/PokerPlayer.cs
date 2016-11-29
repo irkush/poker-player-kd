@@ -256,6 +256,8 @@ namespace Nancy.Simple
                         }
                     }
                 }
+                betValue = 0;
+                return true;
             }
             betValue = 0;
             return false;
