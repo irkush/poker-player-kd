@@ -8,11 +8,10 @@ namespace Nancy.Simple
 {
     public static class PokerPlayer
     {
-        public static readonly string VERSION = "Version 1.2 Other teams are going down";
+        public static readonly string VERSION = "Version 1.337 Other teams are going?";
 
         public static Dictionary<string,int> Dictionary = new Dictionary<string, int>()
                 {
-                    {"1",1 },
                     {"2",2 },
                     {"3",3 },
                     {"4",4 },
@@ -119,7 +118,31 @@ namespace Nancy.Simple
                             betValue = currentBuyIn - ourPlayer["bet"].Value<int>() + smallBlind*2;
                             return true;
                         }
-                            
+                    }
+
+                    // Same suit and close difference, bet small blind.
+                    if (cards[0].Item2 == cards[1].Item2)
+                    {
+                        Console.Error.WriteLine("We have Colors");
+
+                        var firstCardValue = Dictionary[cards[0].Item1];
+                        var secondCardValue = Dictionary[cards[1].Item1];
+
+                        // Need to account for Ace being 1 or 14.
+                        if (firstCardValue == 2 || secondCardValue == 2)
+                        {
+                            if (secondCardValue == 14 || firstCardValue == 14)
+                            {
+                                betValue = currentBuyIn - ourPlayer["bet"].Value<int>() + smallBlind * 2;
+                                return true;
+                            }
+                        }
+
+                        if (Math.Abs(firstCardValue - secondCardValue) < 3)
+                        {
+                            betValue = currentBuyIn - ourPlayer["bet"].Value<int>() + smallBlind * 2;
+                            return true;
+                        }
                     }
 
 
