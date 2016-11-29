@@ -110,7 +110,26 @@ namespace Nancy.Simple
             {
                 return true;
             }
-            
+
+
+            try
+            {
+                ContactRainman();
+            }
+            catch (Exception ex)
+            {
+                
+                Console.Error.WriteLine(ex);
+            }
+
+            var commCount = communityCards.Count();
+            if (commCount == 3)
+            {
+
+                // Can we do something with the cards?   
+            }
+
+
             betValue = 0;
             return false;
         }
@@ -193,6 +212,30 @@ namespace Nancy.Simple
         public static int SmallRaise(int currentBuyIn, int currentBet, int smallBlind)
         {
             return currentBuyIn + currentBet + smallBlind*2;
+        }
+
+        public static void ContactRainman()
+        {
+            string address = "http://rainman.leanpoker.org/rank";
+            var httpWebRequest = (HttpWebRequest)WebRequest.Create(address);
+            //httpWebRequest.ContentType = "application/json";
+            httpWebRequest.Method = "POST";
+
+            using (var streamWriter = new StreamWriter(httpWebRequest.GetRequestStream()))
+            {
+                string json = "cards=[{ \"rank\":\"5\",\"suit\":\"diamonds\"}]";
+
+                streamWriter.Write(json);
+                streamWriter.Flush();
+                streamWriter.Close();
+            }
+
+            var httpResponse = (HttpWebResponse)httpWebRequest.GetResponse();
+            using (var streamReader = new StreamReader(httpResponse.GetResponseStream()))
+            {
+                var result = streamReader.ReadToEnd();
+                Console.Error.WriteLine(result);
+            }
         }
 
         public static void ShowDown(JObject gameState)
