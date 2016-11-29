@@ -77,8 +77,7 @@ namespace Nancy.Simple
 
                 var community_cards = gameState["community_cards"];
 
-                int betValue;
-                bool hasOtherPlay = GetPlay(out betValue,cards, community_cards, ourPlayer, current_buy_in, small_blind);
+                bool hasOtherPlay = GetPlay(out value,cards, community_cards, ourPlayer, current_buy_in, small_blind);
                 if (!hasOtherPlay)
                 {
                     var amount = current_buy_in - our_current_bet;
@@ -161,7 +160,17 @@ namespace Nancy.Simple
                     }
                 }
             }
+            betValue = 0;
+            return false;
+        }
 
+        public static void ShowDown(JObject gameState)
+        {
+            //TODO: Use this method to showdown
+        }
+
+        public static void Junk()
+        {
             //try
             //{
             //    string address = "http://rainman.leanpoker.org/rank";
@@ -191,38 +200,25 @@ namespace Nancy.Simple
             //}
 
 
-            var commCount = communityCards.Count();
+            //var commCount = communityCards.Count();
 
-            // We have the flop on the table.
-            if (commCount == 3)
-            {
-                // Can we do something with the cards?   
-            }
+            //// We have the flop on the table.
+            //if (commCount == 3)
+            //{
+            //    // Can we do something with the cards?   
+            //}
 
-            // We have the turn on the table.
-            if (commCount == 4)
-            {
-                // Can we do something with the cards?   
-            }
+            //// We have the turn on the table.
+            //if (commCount == 4)
+            //{
+            //    // Can we do something with the cards?   
+            //}
 
-            // We have the river on the table.
-            if (commCount == 5)
-            {
-                // Can we do something with the cards?   
-            }
-
-
-            betValue = 0;
-            return false;
-        }
-
-        public static void ShowDown(JObject gameState)
-        {
-            //TODO: Use this method to showdown
-        }
-
-        public static void Junk()
-        {
+            //// We have the river on the table.
+            //if (commCount == 5)
+            //{
+            //    // Can we do something with the cards?   
+            //}
 
             //// Same suit
             //if (cards[0].Item2 == cards[1].Item2)
