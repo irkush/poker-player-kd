@@ -69,7 +69,8 @@ namespace Nancy.Simple
                 }
                 if (cards.Count == 2)
                 {
-                    Console.Error.WriteLine("We have " + cards[0].Rank + " " + cards[1].Suit);
+                    Console.Error.WriteLine("We have " + cards[0].Rank + " " + cards[0].Suit);
+                    Console.Error.WriteLine("We have " + cards[1].Rank + " " + cards[1].Suit);
                 }
 
                 var community_cards = gameState["community_cards"];
