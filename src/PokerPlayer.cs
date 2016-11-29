@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Security.Cryptography.X509Certificates;
 using Newtonsoft.Json.Linq;
 
@@ -157,11 +158,46 @@ namespace Nancy.Simple
                         }
                     }
                 }
-
-
-
-                
             }
+
+            try
+            {
+                string address = "http://rainman.leanpoker.org/rank";
+                string reply = null;
+                using (WebClient client = new WebClient())
+                {
+                    client.Headers.Add("Content-Type", "application/json");
+                    reply = client.UploadString(address, "cards=[\r\n    {\"rank\":\"5\",\"suit\":\"diamonds\"},\r\n    {\"rank\":\"6\",\"suit\":\"diamonds\"},\r\n    {\"rank\":\"7\",\"suit\":\"diamonds\"},\r\n    {\"rank\":\"7\",\"suit\":\"spades\"},\r\n    {\"rank\":\"8\",\"suit\":\"diamonds\"},\r\n    {\"rank\":\"9\",\"suit\":\"diamonds\"}\r\n]");
+                    Console.Error.WriteLine(reply);
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.Error.WriteLine(ex);
+            }
+
+
+            var commCount = communityCards.Count();
+
+            // We have the flop on the table.
+            if (commCount == 3)
+            {
+                // Can we do something with the cards?   
+            }
+
+            // We have the turn on the table.
+            if (commCount == 4)
+            {
+                // Can we do something with the cards?   
+            }
+
+            // We have the river on the table.
+            if (commCount == 5)
+            {
+                // Can we do something with the cards?   
+            }
+
+
             betValue = 0;
             return false;
         }
