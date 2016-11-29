@@ -120,6 +120,7 @@ namespace Nancy.Simple
                         {
                             // Om vi har ett "sämre" par så lägger höjer vi med 2 * smallBlind.
                             betValue = currentBuyIn - ourPlayer["bet"].Value<int>() + smallBlind*2;
+                            Console.Error.WriteLine("We have bad pairs, betting: " + betValue);
                             return true;
                         }
                     }
@@ -132,20 +133,11 @@ namespace Nancy.Simple
                         var firstCardValue = Dictionary[cards[0].Rank];
                         var secondCardValue = Dictionary[cards[1].Rank];
 
-                        // Need to account for Ace being 1 or 14.
-                        //if (firstCardValue == 2 || secondCardValue == 2)
-                        //{
-                        //    if (secondCardValue == 14 || firstCardValue == 14)
-                        //    {
-                        //        betValue = currentBuyIn - ourPlayer["bet"].Value<int>() + smallBlind * 2;
-                        //        return true;
-                        //    }
-                        //}
-
                         // Om vi har steg-chans.
                         if (Math.Abs(firstCardValue - secondCardValue) < 3)
                         {
                             betValue = currentBuyIn - ourPlayer["bet"].Value<int>() + smallBlind * 2;
+                            Console.Error.WriteLine("We have chance for straight, betting: " + betValue);
                             return true;
                         }
                     }
@@ -158,6 +150,7 @@ namespace Nancy.Simple
                         if (cards[0].Rank != cards[1].Rank)
                         {
                             betValue = 0;
+                            Console.Error.WriteLine("We have no good cards, folding");
                             return true;
                         }
                     }
