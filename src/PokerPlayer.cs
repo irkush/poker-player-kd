@@ -77,6 +77,9 @@ namespace Nancy.Simple
                 }
 
                 var community_cards = gameState["community_cards"];
+                return gameState["stack"].Value<int>();
+
+
 
                 // If we are only 2 players remaining with big blind. Go all in.
                 if (gameState["players"].Count() == 2)
