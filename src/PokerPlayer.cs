@@ -10,7 +10,7 @@ namespace Nancy.Simple
 {
     public static class PokerPlayer
     {
-        public static readonly string VERSION = "Version 1.337 Other teams are going?";
+        public static readonly string VERSION = "Version 1.337 Other teams are going?" +Guid.NewGuid().ToString() ;
 
         public static Dictionary<string,int> Dictionary = new Dictionary<string, int>()
                 {
@@ -55,18 +55,18 @@ namespace Nancy.Simple
                 var small_blind = gameState["small_blind"].Value<int>();
 
 
-                var cards = new List<Tuple<string, string>>();
+                var cards = new List<Card>();
                 foreach (var card in hole_cards)
                 {
                     var rank = card["rank"].Value<string>();
                     var suit = card["suit"].Value<string>();
 
-                    cards.Add(new Tuple<string, string>(rank, suit));
+                    cards.Add(new Card(rank, suit));
 
                 }
                 if (cards.Count == 2)
                 {
-                    Console.Error.WriteLine("We have " + cards[0].Item1 + " " + cards[1].Item1);
+                    Console.Error.WriteLine("We have " + cards[0].Rank + " " + cards[1].Suit);
                 }
 
                 var community_cards = gameState["community_cards"];
@@ -92,7 +92,7 @@ namespace Nancy.Simple
             return value;
         }
 
-        private static bool GetPlay(out int betValue, List<Tuple<string,string>> cards, JToken communityCards, JToken ourPlayer, int currentBuyIn, int smallBlind)
+        private static bool GetPlay(out int betValue, List<Card> cards, JToken communityCards, JToken ourPlayer, int currentBuyIn, int smallBlind)
         {
             // Pre-flop
             if (!communityCards.HasValues)
@@ -103,17 +103,17 @@ namespace Nancy.Simple
                 {
                     // Our hand
 
-                    // Same rank and suit, go all in.
-                    if (cards[0].Item1 == cards[1].Item1)
-                        
+                    // Om vi har par
+                    if (cards[0].Rank == cards[1].Rank)
                     {
-                        // ALl in på bra kort.
-                        if (Dictionary[cards[0].Item1] > 10)
+                        // Om vi har ett bra par. (Knekt eller bättre)
+                        if (Dictionary[cards[0].Rank] > 10)
                         {
                             Console.Error.WriteLine("We have pairs, going all in");
                             betValue = ourPlayer["stack"].Value<int>();
                             return true;
                         }
+                        // Resten
                         else
                         {
                             // Om vi har ett "sämre" par så lägger höjer vi med 2 * smallBlind.
@@ -122,24 +122,25 @@ namespace Nancy.Simple
                         }
                     }
 
-                    // Same suit and close difference, bet small blind.
-                    if (cards[0].Item2 == cards[1].Item2)
+                    // Samma färg
+                    if (cards[0].Suit == cards[1].Suit)
                     {
                         Console.Error.WriteLine("We have Colors");
 
-                        var firstCardValue = Dictionary[cards[0].Item1];
-                        var secondCardValue = Dictionary[cards[1].Item1];
+                        var firstCardValue = Dictionary[cards[0].Rank];
+                        var secondCardValue = Dictionary[cards[1].Rank];
 
                         // Need to account for Ace being 1 or 14.
-                        if (firstCardValue == 2 || secondCardValue == 2)
-                        {
-                            if (secondCardValue == 14 || firstCardValue == 14)
-                            {
-                                betValue = currentBuyIn - ourPlayer["bet"].Value<int>() + smallBlind * 2;
-                                return true;
-                            }
-                        }
+                        //if (firstCardValue == 2 || secondCardValue == 2)
+                        //{
+                        //    if (secondCardValue == 14 || firstCardValue == 14)
+                        //    {
+                        //        betValue = currentBuyIn - ourPlayer["bet"].Value<int>() + smallBlind * 2;
+                        //        return true;
+                        //    }
+                        //}
 
+                        // Om vi har steg-chans.
                         if (Math.Abs(firstCardValue - secondCardValue) < 3)
                         {
                             betValue = currentBuyIn - ourPlayer["bet"].Value<int>() + smallBlind * 2;
@@ -152,7 +153,7 @@ namespace Nancy.Simple
                     if (ourPlayer["bet"].Value<int>() < currentBuyIn)
                     {
                         // Om vi inte har par, fold
-                        if (cards[0].Item1 != cards[1].Item1)
+                        if (cards[0].Rank != cards[1].Rank)
                         {
                             betValue = 0;
                             return true;
@@ -161,33 +162,33 @@ namespace Nancy.Simple
                 }
             }
 
-            try
-            {
-                string address = "http://rainman.leanpoker.org/rank";
-                var http = (HttpWebRequest)WebRequest.Create(new Uri(address));
-                http.Accept = "application/json";
-                http.ContentType = "application/json";
-                http.Method = "POST";
+            //try
+            //{
+            //    string address = "http://rainman.leanpoker.org/rank";
+            //    var http = (HttpWebRequest)WebRequest.Create(new Uri(address));
+            //    http.Accept = "application/json";
+            //    http.ContentType = "application/json";
+            //    http.Method = "POST";
 
-                string parsedContent = @"cards=[{""rank"":""5"",""suit"":""diamonds""}]";
-                ASCIIEncoding encoding = new ASCIIEncoding();
-                Byte[] bytes = encoding.GetBytes(parsedContent);
+            //    string parsedContent = @"cards=[{""rank"":""5"",""suit"":""diamonds""}]";
+            //    ASCIIEncoding encoding = new ASCIIEncoding();
+            //    Byte[] bytes = encoding.GetBytes(parsedContent);
 
-                Stream newStream = http.GetRequestStream();
-                newStream.Write(bytes, 0, bytes.Length);
-                newStream.Close();
+            //    Stream newStream = http.GetRequestStream();
+            //    newStream.Write(bytes, 0, bytes.Length);
+            //    newStream.Close();
 
-                var response = http.GetResponse();
+            //    var response = http.GetResponse();
 
-                var stream = response.GetResponseStream();
-                var sr = new StreamReader(stream);
-                var content = sr.ReadToEnd();
-                Console.Error.WriteLine(content);
-            }
-            catch (Exception ex)
-            {
-                Console.Error.WriteLine(ex);
-            }
+            //    var stream = response.GetResponseStream();
+            //    var sr = new StreamReader(stream);
+            //    var content = sr.ReadToEnd();
+            //    Console.Error.WriteLine(content);
+            //}
+            //catch (Exception ex)
+            //{
+            //    Console.Error.WriteLine(ex);
+            //}
 
 
             var commCount = communityCards.Count();
