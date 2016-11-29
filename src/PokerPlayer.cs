@@ -102,6 +102,22 @@ namespace Nancy.Simple
 
         private static bool GetPlay(out int betValue, List<Card> cards, JToken communityCards, JToken ourPlayer, int currentBuyIn, int smallBlind)
         {
+            var currentBet = ourPlayer["bet"].Value<int>();
+
+            // Do stuff during the pre-flop
+            var actedOnPreFlop = ActOnPreFlop(out betValue,cards,communityCards,ourPlayer,currentBuyIn,smallBlind);
+            if (actedOnPreFlop)
+            {
+                return true;
+            }
+            
+            betValue = 0;
+            return false;
+        }
+
+        public static bool ActOnPreFlop(out int betValue, List<Card> cards, JToken communityCards, JToken ourPlayer, int currentBuyIn, int smallBlind)
+        {
+            var currentBet = ourPlayer["bet"].Value<int>();
             // Pre-flop
             if (!communityCards.HasValues)
             {
@@ -123,7 +139,7 @@ namespace Nancy.Simple
                         else
                         {
                             // Om vi har ett "sämre" par så lägger höjer vi med 2 * smallBlind.
-                            betValue = currentBuyIn - ourPlayer["bet"].Value<int>() + smallBlind*2;
+                            betValue = currentBuyIn - ourPlayer["bet"].Value<int>() + smallBlind * 2;
                             Console.Error.WriteLine("We have bad pairs, betting: " + betValue);
                             return true;
                         }
@@ -138,7 +154,7 @@ namespace Nancy.Simple
                         var secondCardValue = Dictionary[cards[1].Rank];
 
                         // Om vi har steg-chans.
-                        if (Math.Abs(firstCardValue - secondCardValue) < 3)
+                        if (Math.Abs(firstCardValue - secondCardValue) < 5)
                         {
                             betValue = currentBuyIn - ourPlayer["bet"].Value<int>() + smallBlind * 2;
                             Console.Error.WriteLine("We have chance for straight, betting: " + betValue);
@@ -150,6 +166,16 @@ namespace Nancy.Simple
                     //Someone has raised/all in
                     if (ourPlayer["bet"].Value<int>() < currentBuyIn)
                     {
+
+                        var firstCardValue = Dictionary[cards[0].Rank];
+                        var secondCardValue = Dictionary[cards[1].Rank];
+                        if (firstCardValue > 10 && secondCardValue > 10)
+                        {
+                            betValue = SmallRaise(currentBuyIn, currentBet, currentBet);
+                            Console.Error.WriteLine("We have two high cards: " + betValue);
+                            return true;
+                        }
+
                         // Om vi inte har par, fold
                         if (cards[0].Rank != cards[1].Rank)
                         {
@@ -162,6 +188,11 @@ namespace Nancy.Simple
             }
             betValue = 0;
             return false;
+        }
+
+        public static int SmallRaise(int currentBuyIn, int currentBet, int smallBlind)
+        {
+            return currentBuyIn + currentBet + smallBlind*2;
         }
 
         public static void ShowDown(JObject gameState)

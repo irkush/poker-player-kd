@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Nancy.Simple
 {
-    class Card
+    public class Card
     {
         public string Rank { get; set; }
         public string Suit { get; set; }
