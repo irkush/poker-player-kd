@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Security.Cryptography.X509Certificates;
+using System.Text;
 using Newtonsoft.Json.Linq;
 
 namespace Nancy.Simple
@@ -163,13 +165,25 @@ namespace Nancy.Simple
             try
             {
                 string address = "http://rainman.leanpoker.org/rank";
-                string reply = null;
-                using (WebClient client = new WebClient())
-                {
-                    client.Headers.Add("Content-Type", "application/json");
-                    reply = client.UploadString(address, "cards=[\r\n    {\"rank\":\"5\",\"suit\":\"diamonds\"},\r\n    {\"rank\":\"6\",\"suit\":\"diamonds\"},\r\n    {\"rank\":\"7\",\"suit\":\"diamonds\"},\r\n    {\"rank\":\"7\",\"suit\":\"spades\"},\r\n    {\"rank\":\"8\",\"suit\":\"diamonds\"},\r\n    {\"rank\":\"9\",\"suit\":\"diamonds\"}\r\n]");
-                    Console.Error.WriteLine(reply);
-                }
+                var http = (HttpWebRequest)WebRequest.Create(new Uri(address));
+                http.Accept = "application/json";
+                http.ContentType = "application/json";
+                http.Method = "POST";
+
+                string parsedContent = "cards=[{\"rank\":\"5\",\"suit\":\"diamonds\"},\r\n    {\"rank\":\"6\",\"suit\":\"diamonds\"},\r\n    {\"rank\":\"7\",\"suit\":\"diamonds\"},\r\n    {\"rank\":\"7\",\"suit\":\"spades\"},\r\n    {\"rank\":\"8\",\"suit\":\"diamonds\"}]";
+                ASCIIEncoding encoding = new ASCIIEncoding();
+                Byte[] bytes = encoding.GetBytes(parsedContent);
+
+                Stream newStream = http.GetRequestStream();
+                newStream.Write(bytes, 0, bytes.Length);
+                newStream.Close();
+
+                var response = http.GetResponse();
+
+                var stream = response.GetResponseStream();
+                var sr = new StreamReader(stream);
+                var content = sr.ReadToEnd();
+                Console.Error.WriteLine(content);
             }
             catch (Exception ex)
             {
