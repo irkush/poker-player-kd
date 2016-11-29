@@ -36,7 +36,7 @@ namespace Nancy.Simple
 		    }
 
 			//TODO: Use this method to return the value You want to bet
-			return 20;
+			return 0;
 		}
 
 		public static void ShowDown(JObject gameState)
