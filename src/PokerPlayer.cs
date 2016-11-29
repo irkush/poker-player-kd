@@ -166,7 +166,7 @@ namespace Nancy.Simple
                         else
                         {
                             // Om vi har ett "sämre" par så lägger höjer vi med 2 * smallBlind.
-                            betValue = currentBuyIn - ourPlayer["bet"].Value<int>() + smallBlind * 2;
+                            betValue = currentBuyIn - currentBet + smallBlind * 2;
                             Console.Error.WriteLine("We have bad pairs, betting: " + betValue);
                             return true;
                         }
@@ -183,7 +183,7 @@ namespace Nancy.Simple
                         // Om vi har steg-chans.
                         if (Math.Abs(firstCardValue - secondCardValue) < 5)
                         {
-                            betValue = currentBuyIn - ourPlayer["bet"].Value<int>() + smallBlind * 2;
+                            betValue = currentBuyIn - currentBet + smallBlind * 2;
                             Console.Error.WriteLine("We have chance for straight, betting: " + betValue);
                             return true;
                         }
@@ -235,12 +235,15 @@ namespace Nancy.Simple
                 var baseStr = "cards=";
 
                 var result = JsonConvert.SerializeObject(allCards);
-                Console.Error.WriteLine("Json sent: " + result);
+
+                string json = baseStr + result;
+                json = json.ToLower();
+                Console.Error.WriteLine("Json sent: " + json);
 
 
 
 
-                string json = "cards=[{ \"rank\":\"5\",\"suit\":\"diamonds\"}]";
+               
 
                 streamWriter.Write(json);
                 streamWriter.Flush();
