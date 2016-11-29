@@ -4,11 +4,11 @@ namespace Nancy.Simple
 {
 	public static class PokerPlayer
 	{
-		public static readonly string VERSION = "Version 1";
+		public static readonly string VERSION = "Version 1.1";
 
 		public static int BetRequest(JObject gameState)
 		{
-		    return 100;
+		    return 10;
 
 
 			//TODO: Use this method to return the value You want to bet
