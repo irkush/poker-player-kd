@@ -123,7 +123,7 @@ namespace Nancy.Simple
 
             try
             {
-                ContactRainman(allCards);
+                //ContactRainman(allCards);
             }
             catch (Exception ex)
             {
