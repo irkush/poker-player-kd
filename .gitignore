@@ -2,3 +2,4 @@ bin/
 obj/
 .DS_Store
 *.userprefs
+/.vs/Nancy.Simple/v14/.suo
