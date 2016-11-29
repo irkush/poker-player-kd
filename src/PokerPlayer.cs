@@ -32,7 +32,7 @@ namespace Nancy.Simple
 
         public static int BetRequest(JObject gameState)
         {
-            Console.Error.WriteLine("Betting round started");
+            Console.Error.WriteLine("Betting round started " + VERSION);
             int value = 0;
             try
             {
