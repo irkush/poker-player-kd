@@ -8,7 +8,7 @@ namespace Nancy.Simple
 {
     public static class PokerPlayer
     {
-        public static readonly string VERSION = "Version 1.1 Bet on other team losing on pre-flop pair";
+        public static readonly string VERSION = "Version 1.1 Other teams are going down";
 
         public static Dictionary<string,int> Dictionary = new Dictionary<string, int>()
                 {
@@ -50,8 +50,8 @@ namespace Nancy.Simple
 
                 var hole_cards = ourPlayer["hole_cards"];
 
-               
 
+                var small_blind = gameState["small_blind"].Value<int>();
 
 
                 var cards = new List<Tuple<string, string>>();
@@ -71,7 +71,7 @@ namespace Nancy.Simple
                 var community_cards = gameState["community_cards"];
 
                 int betValue;
-                bool hasOtherPlay = GetPlay(out betValue,cards, community_cards, ourPlayer);
+                bool hasOtherPlay = GetPlay(out betValue,cards, community_cards, ourPlayer, current_buy_in, small_blind);
                 if (!hasOtherPlay)
                 {
                     return current_buy_in - our_current_bet;
@@ -91,15 +91,18 @@ namespace Nancy.Simple
             return value;
         }
 
-        private static bool GetPlay(out int betValue, List<Tuple<string,string>> cards, JToken communityCards, JToken ourPlayer)
+        private static bool GetPlay(out int betValue, List<Tuple<string,string>> cards, JToken communityCards, JToken ourPlayer, int currentBuyIn, int smallBlind)
         {
-
+            // Pre-flop
             if (!communityCards.HasValues)
             {
                 Console.Error.WriteLine("No community cards in place");
+                // We have both cards on hand.
                 if (cards.Count == 2)
                 {
-                    // Same rank
+                    // Our hand
+
+                    // Same rank, go all in.
                     if (cards[0].Item1 == cards[1].Item1)
                     {
                         Console.Error.WriteLine("We have pairs, going all in");
@@ -107,23 +110,22 @@ namespace Nancy.Simple
                         return true;
                     }
 
-                    // Same suit
-                    if (cards[0].Item2 == cards[1].Item2)
+
+                    //Someone has raised/all in
+                    if (ourPlayer["bet"].Value<int>() < currentBuyIn)
                     {
-                        Console.Error.WriteLine("We have Colors");
-                        //value = ourPlayer["stack"].Value<int>();
-
-                        var firstCardValue = Dictionary[cards[0].Item1];
-                        var secondCardValue = Dictionary[cards[1].Item1];
-
-                        if (Math.Abs(firstCardValue - secondCardValue) == 1)
+                        // Om vi inte har par, fold
+                        if (cards[0].Item1 != cards[1].Item1)
                         {
-                            // Possible straight flush
+                            betValue = 0;
+                            return true;
                         }
                     }
-
                 }
 
+
+
+                
             }
             betValue = 0;
             return false;
@@ -132,6 +134,25 @@ namespace Nancy.Simple
         public static void ShowDown(JObject gameState)
         {
             //TODO: Use this method to showdown
+        }
+
+        public static void Junk()
+        {
+
+            //// Same suit
+            //if (cards[0].Item2 == cards[1].Item2)
+            //{
+            //    Console.Error.WriteLine("We have Colors");
+            //    //value = ourPlayer["stack"].Value<int>();
+
+            //    var firstCardValue = Dictionary[cards[0].Item1];
+            //    var secondCardValue = Dictionary[cards[1].Item1];
+
+            //    if (Math.Abs(firstCardValue - secondCardValue) == 1)
+            //    {
+            //        // Possible straight flush
+            //    }
+            //}
         }
     }
 }
