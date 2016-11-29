@@ -35,11 +35,13 @@ namespace Nancy.Simple
             Console.Error.WriteLine("Betting round started " + VERSION);
 
             Console.Error.WriteLine(gameState["game_id"].Value<string>());
-            int value = 0;
+            //int value = 0;
 
-            var in_action = gameState["in_action"].Value<int>();
-            var ourPlayer = gameState["players"][in_action];
-            return ourPlayer["stack"].Value<int>();
+            //var in_action = gameState["in_action"].Value<int>();
+            //var ourPlayer = gameState["players"][in_action];
+            //return ourPlayer["stack"].Value<int>();
+
+            return 999999;
 
 
 
@@ -103,7 +105,7 @@ namespace Nancy.Simple
             //    {
             //        var amount = current_buy_in - our_current_bet;
             //        Console.Error.WriteLine("Got no better to do, defaulting " + amount);
-                   
+
             //        return amount;
             //    }
 
