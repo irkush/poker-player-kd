@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
-using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using Newtonsoft.Json.Linq;
 
@@ -170,7 +169,7 @@ namespace Nancy.Simple
                 http.ContentType = "application/json";
                 http.Method = "POST";
 
-                string parsedContent = "cards=[{\"rank\":\"5\",\"suit\":\"diamonds\"},\r\n    {\"rank\":\"6\",\"suit\":\"diamonds\"},\r\n    {\"rank\":\"7\",\"suit\":\"diamonds\"},\r\n    {\"rank\":\"7\",\"suit\":\"spades\"},\r\n    {\"rank\":\"8\",\"suit\":\"diamonds\"}]";
+                string parsedContent = @"cards=[{""rank"":""5"",""suit"":""diamonds""}]";
                 ASCIIEncoding encoding = new ASCIIEncoding();
                 Byte[] bytes = encoding.GetBytes(parsedContent);
 
