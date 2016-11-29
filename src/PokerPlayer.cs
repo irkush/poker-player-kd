@@ -144,17 +144,34 @@ namespace Nancy.Simple
                 Console.Error.WriteLine(ex);
             }
 
-            if (commCount == 3)
+            if (communityCards.Any())
             {
                 var sortedCards = allCards.OrderBy(x => x.Rank)
-                    .ThenBy(x => x.Suit);
+               .ThenBy(x => x.Suit);
 
+                var groupResults = from sort in sortedCards
+                                   group sort by sort.Rank
+                    into gro
+                                   select new { Rank = gro.Key, Count = gro.Count() };
 
+                var resultsGroup = groupResults.OrderByDescending(x => x.Count);
 
+                int firstCount = resultsGroup.First().Count;
+                // triss eller fyrtal
+                if (firstCount >= 3)
+                {
+                    betValue = 9999;
+                    return true;
+                }
+                else if(firstCount <=2)
+                {
+                    betValue = 0;
+                    return false;
+                }
+            }
 
 
                 // Can we do something with the cards?   
-            }
 
 
             betValue = 0;
@@ -184,6 +201,14 @@ namespace Nancy.Simple
                         // Resten
                         else
                         {
+                            if (currentBuyIn > currentBet + smallBlind*2)
+                            {
+                                betValue = 0;
+                                Console.Error.WriteLine("We have no good cards, folding");
+                                return true;
+                            }
+
+
                             // Om vi har ett "sämre" par så lägger höjer vi med 2 * smallBlind.
                             betValue = currentBuyIn - currentBet + smallBlind * 2;
                             Console.Error.WriteLine("We have bad pairs, betting: " + betValue);
