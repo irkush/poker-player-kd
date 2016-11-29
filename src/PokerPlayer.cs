@@ -32,6 +32,8 @@ namespace Nancy.Simple
         public static int BetRequest(JObject gameState)
         {
             Console.Error.WriteLine("Betting round started " + VERSION);
+
+            Console.Error.WriteLine(gameState["game_id"].Value<string>());
             int value = 0;
             try
             {
