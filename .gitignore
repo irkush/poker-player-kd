@@ -3,3 +3,4 @@ obj/
 .DS_Store
 *.userprefs
 /.vs/Nancy.Simple/v14/.suo
+/packages/Newtonsoft.Json.6.0.8

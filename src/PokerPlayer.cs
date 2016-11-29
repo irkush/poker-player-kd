@@ -8,7 +8,7 @@ namespace Nancy.Simple
 
 		public static int BetRequest(JObject gameState)
 		{
-
+		    return 30;
 
 		    var current_buy_in = gameState["current_buy_in"].Value<int>();
 
@@ -16,6 +16,9 @@ namespace Nancy.Simple
 		    var in_action = gameState["in_action"].Value<int>();
 
             var our_current_bet = gameState["players"][in_action]["bet"].Value<int>();
+
+
+            // Om vi har bra par gå all in. ( KnKn, DD, KK, EE )
 
 
             // Allways check
