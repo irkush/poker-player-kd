@@ -218,7 +218,7 @@ namespace Nancy.Simple
         {
             string address = "http://rainman.leanpoker.org/rank";
             var httpWebRequest = (HttpWebRequest)WebRequest.Create(address);
-            //httpWebRequest.ContentType = "application/json";
+            httpWebRequest.ContentType = "text/plain";
             httpWebRequest.Method = "POST";
 
             using (var streamWriter = new StreamWriter(httpWebRequest.GetRequestStream()))
