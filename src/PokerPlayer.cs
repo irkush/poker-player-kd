@@ -55,6 +55,9 @@ namespace Nancy.Simple
                 var small_blind = gameState["small_blind"].Value<int>();
 
 
+                Console.Error.WriteLine("Our current bet: " + ourPlayer["bet"].Value<int>());
+
+
                 var cards = new List<Card>();
                 foreach (var card in hole_cards)
                 {
@@ -101,8 +104,6 @@ namespace Nancy.Simple
                 // We have both cards on hand.
                 if (cards.Count == 2)
                 {
-                    // Our hand
-
                     // Om vi har par
                     if (cards[0].Rank == cards[1].Rank)
                     {
